@@ -36,9 +36,9 @@
     <category term="前端" scheme="http://example.com/categories/%E5%89%8D%E7%AB%AF/"/>
     
     
-    <category term="钉钉" scheme="http://example.com/tags/%E9%92%89%E9%92%89/"/>
-    
     <category term="vue" scheme="http://example.com/tags/vue/"/>
+    
+    <category term="钉钉" scheme="http://example.com/tags/%E9%92%89%E9%92%89/"/>
     
   </entry>
   
