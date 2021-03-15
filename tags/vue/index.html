@@ -26,7 +26,7 @@
 <meta name="description" content="扶我起来，我还能学">
 <meta property="og:type" content="website">
 <meta property="og:title" content="爱喝酸奶的猫">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="http://example.com/tags/vue/index.html">
 <meta property="og:site_name" content="爱喝酸奶的猫">
 <meta property="og:description" content="扶我起来，我还能学">
 <meta property="og:locale" content="zh_CN">
@@ -34,19 +34,19 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/tags/vue/">
 
 
 <script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
+    isHome : false,
     isPost : false,
     lang   : 'zh-CN'
   };
 </script>
-<title>爱喝酸奶的猫</title>
+<title>标签: vue | 爱喝酸奶的猫</title>
   
 
 
@@ -245,86 +245,50 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
-
-    
+    <div class="main-inner tag posts-collapse">
 
 
-<div class="post-block">
   
   
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/15/%E9%92%89%E9%92%89%E4%B8%AD%E6%8B%A6%E6%88%AA%E5%B7%A6%E4%BE%A7%E8%BF%94%E5%9B%9E%E9%94%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="zzzing">
-      <meta itemprop="description" content="扶我起来，我还能学">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="爱喝酸奶的猫">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/03/15/%E9%92%89%E9%92%89%E4%B8%AD%E6%8B%A6%E6%88%AA%E5%B7%A6%E4%BE%A7%E8%BF%94%E5%9B%9E%E9%94%AE/" class="post-title-link" itemprop="url">钉钉中拦截左侧返回键</a>
+  
+  <div class="post-block">
+    <div class="post-content">
+      <div class="collection-title">
+        <h2 class="collection-header">vue
+          <small>标签</small>
         </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-03-15 15:43:55 / 修改时间：17:04:17" itemprop="dateCreated datePublished" datetime="2021-03-15T15:43:55+08:00">2021-03-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>钉钉中如何拦截导航栏中左上角的返回键，其实钉钉有提供 jssdk 供开发者调用，但是这个拦截方法 android 端在单页面应用开发中有 bug，具体原因可参照这篇文章<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42183524/article/details/105502935">钉钉微应用 Android 返回键自定义功能 兼容</a></p>
-<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>vue-router 中的<code>beforeRouteLeave</code>钩子可以完美解决这个问题，具体代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * 路由拦截</span><br><span class="line"> *&#x2F;</span><br><span class="line">beforeRouteLeave(to, from, next) &#123;</span><br><span class="line">  &#x2F;&#x2F; this.nextRoute为data中定义的字段 值为true、false</span><br><span class="line">  if (this.nextRoute) &#123;</span><br><span class="line">    next();</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">      &#x2F;&#x2F;</span><br><span class="line">      &#x2F;&#x2F;业务逻辑...</span><br><span class="line">      &#x2F;&#x2F;</span><br><span class="line">    next(false); &#x2F;&#x2F;next(false)可以阻止页面离开</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">  &#x2F;**</span><br><span class="line">   * 返回</span><br><span class="line">   *&#x2F;</span><br><span class="line">quitBack() &#123;</span><br><span class="line">  if (this.queryParams.isApp !&#x3D; 1) &#123;</span><br><span class="line">    this.nextRoute &#x3D; true;</span><br><span class="line">    this.$router.go(-1);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>其实主体思路就是利用next(false)无法离开当前页面，然后再结合业务逻辑，将nextRoute标识改为true时，即可离开页面。   </p>
+      </div>
 
       
+    <div class="collection-year">
+      <span class="collection-header">2021</span>
     </div>
 
-    
-    
-    
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2021-03-15T15:43:55+08:00"
+              content="2021-03-15">
+          03-15
+        </time>
+      </div>
 
-    <footer class="post-footer">
-        <div class="post-eof"></div>
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/03/15/%E9%92%89%E9%92%89%E4%B8%AD%E6%8B%A6%E6%88%AA%E5%B7%A6%E4%BE%A7%E8%BF%94%E5%9B%9E%E9%94%AE/" itemprop="url">
+            <span itemprop="name">钉钉中拦截左侧返回键</span>
+          </a>
+      </div>
+
       
-    </footer>
+    </header>
   </article>
-</div>
 
-
-
-
+    </div>
+  </div>
+  
+  
+  
 
 
 <script>
