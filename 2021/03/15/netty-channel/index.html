@@ -254,9 +254,9 @@ Channel能做写什么事情Chann"/>
 <p>以上是一些Channel的一些方法的定义，由于本身Channel是一个抽象的接口，所以Channel里面只有方法的定义而没有涉及到一些具体的操作，详情还是要结合源码来一起分析Channel的。</p>
 <h3 id="Channel源码分析"><a href="#Channel源码分析" class="headerlink" title="Channel源码分析"></a>Channel源码分析</h3><p>由于Channel是一个顶层接口，其实现类非常的多，如果读者有兴趣想进一步了解的，可以从官网上下载其源码进行分析Channel到底有哪些实现类，以及这些实现类到底能做些什么事情。这里我们就主要分析其两个比较主要的实现类，NioServerSocketChannel和NioSocketChannel。</p>
 <h4 id="Channel继承关系类图"><a href="#Channel继承关系类图" class="headerlink" title="Channel继承关系类图"></a>Channel继承关系类图</h4><p>首先看 NioServerSocketChannel 的继承关系类图：</p>
-<p><img src="/images/channel_class_extends.png" alt="channel_class_extends.png"></p>
+<p><img src="/images/netty_channel_class_extends.png" alt="netty_channel_class_extends.png"></p>
 <p>其次是 NioSocketChannel 的继承关系类图：</p>
-<p><img src="/images/nio_socket_channel.png" alt="nio_socket_channel.png"></p>
+<p><img src="/images/netty_nio_socket_channel.png" alt="netty_nio_socket_channel.png"></p>
 <p>刨除Channel顶层接口实现的几个接口以及AbstractChannel抽象类继承的抽象类之外，NioServerSocketChannel 和 NioSocketChannel的继承关系还是相对简单的。</p>
 <p>下面我们就来具体的分析。</p>
 <h4 id="AbstractChannel的源码分析"><a href="#AbstractChannel的源码分析" class="headerlink" title="AbstractChannel的源码分析"></a>AbstractChannel的源码分析</h4><h5 id="成员变量的定义"><a href="#成员变量的定义" class="headerlink" title="成员变量的定义"></a>成员变量的定义</h5><p>先来看一下AbstractChannel成员变量的定义：</p>
