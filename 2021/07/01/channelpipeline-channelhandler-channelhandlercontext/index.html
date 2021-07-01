@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!--Description-->
+
+    
+
+    
+        <meta name="description" content="什么是ChannelPipeline？抽象的来说，ChannelPipeline是一个拦截或者处理 Channel 的入站和出站事件的 ChannelHandler 实例链。
+具象的来说，ChannelPipeline是ChannelHandler的容器，负责管理ChannelHandler和事件的"/>
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="klaus_turbo"/>
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Netty-ChannelPipeline，ChannelHandler和ChannelHandlerContext"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="什么是ChannelPipeline？抽象的来说，ChannelPipeline是一个拦截或者处理 Channel 的入站和出站事件的 ChannelHandler 实例链。
+具象的来说，ChannelPipeline是ChannelHandler的容器，负责管理ChannelHandler和事件的"/>
+    
+
+    <!--Open Graph Site Name-->
+        <meta property="og:site_name" content="进学致和，行方思远。"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article"/>
+    
+
+    <!--Page Cover-->
+    
+    
+        <meta property="og:image" content="http://example.comimg/crescent-moon-149988-5530eca8bb0e4a8b92115b454a660af5.jpg"/>
+    
+
+        <meta name="twitter:card" content="summary_large_image"/>
+
+    
+
+    
+        <meta name="twitter:image" content="http://example.comimg/crescent-moon-149988-5530eca8bb0e4a8b92115b454a660af5.jpg"/>
+    
+
+    <!-- Title -->
+    
+    <title>Netty-ChannelPipeline，ChannelHandler和ChannelHandlerContext - 进学致和，行方思远。</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet"/>
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="进学致和，行方思远。" type="application/atom+xml">
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Configurable Title</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a target="_blank" rel="noopener" href="https://github.com/klaus-gu">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('/img/crescent-moon-149988-5530eca8bb0e4a8b92115b454a660af5.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Netty-ChannelPipeline，ChannelHandler和ChannelHandlerContext</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2021-07-01
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Netty/">#Netty</a> <a href="/tags/Channel/">#Channel</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                        
+
+<a href="/categories/Netty/">Netty</a>
+
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="什么是ChannelPipeline？"><a href="#什么是ChannelPipeline？" class="headerlink" title="什么是ChannelPipeline？"></a>什么是ChannelPipeline？</h3><p>抽象的来说，ChannelPipeline是一个拦截或者处理 Channel 的入站和出站事件的 ChannelHandler 实例链。</p>
+<p>具象的来说，ChannelPipeline是ChannelHandler的容器，负责管理ChannelHandler和事件的调度与拦截。</p>
+<p>ChannelPipeline提供了一种高级形式的拦截过滤器模式，使用户可以完全控制事件的处理方式以及ChannelPipeline中的ChannelHandlers如何进行交互。</p>
+<p>对于每一个Channel来说，Netty会为其单独创建一个ChannelPipeline并将其与该创建的Pipeline绑定。绑定后，Channel与ChannelPipeline之间的耦合是永久的。Channel不能绑定另一条ChannelPipeline或者将当前已经绑定的ChannelPipeline与自己捆绑。当然这些个操作Netty已经帮我们做好了。</p>
+<p>我们来看下面这一张图：<br><img src="/images/pipeline.png" alt="pipeline.png"></p>
+<p>图内标注了 InboundHandler 和 OutbountHandler ，表示在ChannelPipeline 中的消息流转是有方向的。同时也展示出了这入站和出站的来源。通常来说，InboundHandler 处理由图中底部由Netty内部I/O产生的入站数据。一个入站的I/O事件将从底部向上传播，出站的I/O事件将从上往下传播，通常Netty将入站开始的地方称为头部，出站开始的地方称为尾部。</p>
+<p>在 ChannelPipeline 传播事件时，它会判断 ChannelPipeline 中的下一个 ChannelHandler 的类型是否和事件的运动方向相匹配。如果不匹配，ChannelPipeline 将跳过该 ChannelHandler 并前进到下一个，直到它找到和该事件所期望的方向相匹配的为止。(当然，ChannelHandler 也可以同时实现 ChannelInboundHandler 接口和 ChannelOutboundHandler 接口。)</p>
+<h4 id="ChannelPipeline源码分析"><a href="#ChannelPipeline源码分析" class="headerlink" title="ChannelPipeline源码分析"></a>ChannelPipeline源码分析</h4><p>首先来看一下ChannelPipeline的类关系图：</p>
+<p><img src="/images/channel_pipeline_class.png" alt="channel_pipeline_class.png"></p>
+<p>它的继承关系十分的简单，直接实现类也就只有一个DefaultChannelPipeline。由于ChannelPipeline的自身操作主要集中在链的操作上面，而一些例如传播事件等都是通过转发的操作进行的，我们就着重分析其链的操作。</p>
+<p>几个常用的操作大概有下面这几种：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ChannelPipeline addFirst(String name, ChannelHandler handler);</span><br><span class="line"></span><br><span class="line">ChannelPipeline addLast(String name, ChannelHandler handler);</span><br><span class="line"></span><br><span class="line">ChannelPipeline addBefore(String baseName, String name, ChannelHandler handler);</span><br><span class="line"></span><br><span class="line">ChannelPipeline addAfter(String baseName, String name, ChannelHandler handler);</span><br><span class="line"></span><br><span class="line">ChannelPipeline remove(ChannelHandler handler);</span><br><span class="line"></span><br><span class="line">ChannelPipeline replace(ChannelHandler oldHandler, String newName, ChannelHandler newHandler);</span><br></pre></td></tr></table></figure>
+<p>从方法名字应该不难看出这些方法的作用吧。添加的方法我们这里就来分析一个addBefore（），来看一下它的实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public final ChannelPipeline addBefore(</span><br><span class="line">            EventExecutorGroup group, String baseName, String name, ChannelHandler handler) &#123;</span><br><span class="line">        final AbstractChannelHandlerContext newCtx;</span><br><span class="line">        final AbstractChannelHandlerContext ctx;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">	    &#x2F;&#x2F; 做重复校验</span><br><span class="line">            checkMultiplicity(handler);</span><br><span class="line">            name &#x3D; filterName(name, handler);</span><br><span class="line">            &#x2F;&#x2F; 通过名字获取ctx实例</span><br><span class="line">            ctx &#x3D; getContextOrDie(baseName);</span><br><span class="line">            &#x2F;&#x2F; 新增ChannelHandler</span><br><span class="line">            newCtx &#x3D; newContext(group, name, handler);</span><br><span class="line">            addBefore0(ctx, newCtx);</span><br><span class="line">            if (!registered) &#123;</span><br><span class="line">                newCtx.setAddPending();</span><br><span class="line">                callHandlerCallbackLater(newCtx, true);</span><br><span class="line">                return this;</span><br><span class="line">            &#125;</span><br><span class="line">            EventExecutor executor &#x3D; newCtx.executor();</span><br><span class="line">            if (!executor.inEventLoop()) &#123;</span><br><span class="line">                callHandlerAddedInEventLoop(newCtx, executor);</span><br><span class="line">                return this;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        callHandlerAdded0(newCtx);</span><br><span class="line">        return this;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>由于ChannelPipeline支持运行期的动态修改，所以可能存在I/O线程与用户线程的并发访问或者是多个用户线程的并发访问。所以在方法内部使用了同步块。</p>
+<p>重复性校验主要的作用是检查当前加入进来的ChannelHandler已经加进来了了，若已经加入那么这个Handler是否使用了@Sharable注解注释了，否则将会抛出异常：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private static void checkMultiplicity(ChannelHandler handler) &#123;</span><br><span class="line">        if (handler instanceof ChannelHandlerAdapter) &#123;</span><br><span class="line">            ChannelHandlerAdapter h &#x3D; (ChannelHandlerAdapter) handler;</span><br><span class="line">            if (!h.isSharable() &amp;&amp; h.added) &#123;</span><br><span class="line">                throw new ChannelPipelineException(</span><br><span class="line">                        h.getClass().getName() +</span><br><span class="line">                                &quot; is not a @Sharable handler, so can&#39;t be added or removed multiple times.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            h.added &#x3D; true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后是通过filterName（）这个方法对当前要添加的handler进行取名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private String filterName(String name, ChannelHandler handler) &#123;</span><br><span class="line">        &#x2F;&#x2F; 无名字则生成一个</span><br><span class="line">        if (name &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return generateName(handler);</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F; 判断名字是否重复</span><br><span class="line">        checkDuplicateName(name);</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是核心方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ctx &#x3D; getContextOrDie(baseName);</span><br><span class="line">         </span><br><span class="line">newCtx &#x3D; newContext(group, name, handler);</span><br></pre></td></tr></table></figure>
+<p>首先是通过getContextOrDie（）方法获取当前handler添加的后一个handler的handlerContext。addBefore方法针对两个handler，一个是我们要添加的handler，另一个是已经添加进去的那个handler，在方法中的表述就是newCtx和ctx。来看一下获取ctx（我们要添加进去的handler的后一个handler的handlerContext）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 1</span><br><span class="line"> private AbstractChannelHandlerContext getContextOrDie(String name) &#123;</span><br><span class="line">        AbstractChannelHandlerContext ctx &#x3D; (AbstractChannelHandlerContext) context(name);</span><br><span class="line">        if (ctx &#x3D;&#x3D; null) &#123;</span><br><span class="line">            throw new NoSuchElementException(name);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return ctx;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#x2F;&#x2F; 2</span><br><span class="line"> public final ChannelHandlerContext context(String name) &#123;</span><br><span class="line">        return context0(ObjectUtil.checkNotNull(name, &quot;name&quot;));</span><br><span class="line">    &#125;</span><br><span class="line">&#x2F;&#x2F; 3</span><br><span class="line"> private AbstractChannelHandlerContext context0(String name) &#123;</span><br><span class="line">        AbstractChannelHandlerContext context &#x3D; head.next;</span><br><span class="line">        while (context !&#x3D; tail) &#123;</span><br><span class="line">            if (context.name().equals(name)) &#123;</span><br><span class="line">                return context;</span><br><span class="line">            &#125;</span><br><span class="line">            context &#x3D; context.next;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>获取ctx的主要看方法3，由于在初始化的时候pipeline定义了一个头和尾，所以我们可以看到在获取的时候我们总是去除了头尾，遍历context链表，直到有匹配的。<br>回到方法1，若我们没有匹配到传入的name，则会抛出一个NoSuchElementException异常。反之则返回ctx。<br>对于新的context，是通过调用了Contex构造方法来产生一个新的context，这个方法在几个添加handler的方法中是差不多的，这就是“每当handler加入到pipeline中的时候就会生成一个对应的contex”。<br>然后是正式的将我们构造好的context加入到当前的context链中去的操作，通过方法addBefore0（）实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private static void addBefore0(AbstractChannelHandlerContext ctx, AbstractChannelHandlerContext newCtx) &#123;</span><br><span class="line">        newCtx.prev &#x3D; ctx.prev;</span><br><span class="line">        newCtx.next &#x3D; ctx;</span><br><span class="line">        ctx.prev.next &#x3D; newCtx;</span><br><span class="line">        ctx.prev &#x3D; newCtx;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里就是普通的链表操作，当前context持有的前后context引用的变换。</p>
+<p>接着看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 1</span><br><span class="line">if (!registered) &#123;</span><br><span class="line">        newCtx.setAddPending();</span><br><span class="line">        callHandlerCallbackLater(newCtx, true);</span><br><span class="line">        return this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先是代码块1，这里对Channel是否已经注册到Eventloop进行了判断，若未注册，将handler的状态由INIT–&gt;ADD_PENDING，并将添加Handler这个事件加入到一个专门处理延迟事件的链表中（Channel注册后需要处理的任务）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private void callHandlerCallbackLater(AbstractChannelHandlerContext ctx, boolean added) &#123;</span><br><span class="line">       assert !registered;</span><br><span class="line">       &#x2F;&#x2F; 判断是否是添加handler的事件</span><br><span class="line">       PendingHandlerCallback task &#x3D; added ? new PendingHandlerAddedTask(ctx) : new PendingHandlerRemovedTask(ctx);</span><br><span class="line">       PendingHandlerCallback pending &#x3D; pendingHandlerCallbackHead;</span><br><span class="line">       if (pending &#x3D;&#x3D; null) &#123;</span><br><span class="line">           pendingHandlerCallbackHead &#x3D; task;</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           &#x2F;&#x2F; 将当前task加入链尾</span><br><span class="line">           while (pending.next !&#x3D; null) &#123;</span><br><span class="line">               pending &#x3D; pending.next;</span><br><span class="line">           &#125;</span><br><span class="line">           pending.next &#x3D; task;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>看一下这个task的真面目：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 父类</span><br><span class="line">private abstract static class PendingHandlerCallback implements Runnable &#123;</span><br><span class="line">        final AbstractChannelHandlerContext ctx;</span><br><span class="line">        PendingHandlerCallback next;</span><br><span class="line"></span><br><span class="line">        PendingHandlerCallback(AbstractChannelHandlerContext ctx) &#123;</span><br><span class="line">            this.ctx &#x3D; ctx;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        abstract void execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 实现类</span><br><span class="line">private final class PendingHandlerAddedTask extends PendingHandlerCallback &#123;</span><br><span class="line">        PendingHandlerAddedTask(AbstractChannelHandlerContext ctx) &#123;</span><br><span class="line">            super(ctx);</span><br><span class="line">        &#125;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            callHandlerAdded0(ctx);</span><br><span class="line">        &#125;</span><br><span class="line">        @Override</span><br><span class="line">        void execute() &#123;</span><br><span class="line">            EventExecutor executor &#x3D; ctx.executor();</span><br><span class="line">	   &#x2F;&#x2F; 判断执行的线程是否是原本分配的线程</span><br><span class="line">            if (executor.inEventLoop()) &#123;</span><br><span class="line">                callHandlerAdded0(ctx);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">		&#x2F;&#x2F; 执行callHandlerAdded0(ctx)</span><br><span class="line">                    executor.execute(this);</span><br><span class="line">                &#125; catch (RejectedExecutionException e) &#123;</span><br><span class="line">                    if (logger.isWarnEnabled()) &#123;</span><br><span class="line">                        logger.warn(</span><br><span class="line">                                &quot;Can&#39;t invoke handlerAdded() as the EventExecutor &#123;&#125; rejected it, removing handler &#123;&#125;.&quot;,</span><br><span class="line">                                executor, ctx.name(), e);</span><br><span class="line">                    &#125;</span><br><span class="line">		&#x2F;&#x2F; 事件执行异常，将新加的handlerContext从列表中移除</span><br><span class="line">                    atomicRemoveFromHandlerList(ctx);</span><br><span class="line">		&#x2F;&#x2F;设置handler的状态为REMOVE_COMPLETE</span><br><span class="line">                    ctx.setRemoved();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这就是其添加的时候定义的一个task，来看这个task执行的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 1</span><br><span class="line">private void callHandlerAdded0(final AbstractChannelHandlerContext ctx) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            ctx.callHandlerAdded();</span><br><span class="line">        &#125; catch (Throwable t) &#123;</span><br><span class="line">           &#x2F;&#x2F; ...省略异常之后handler的移除操作</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#x2F;&#x2F; 2</span><br><span class="line">final void callHandlerAdded() throws Exception &#123;</span><br><span class="line">        if (setAddComplete()) &#123;</span><br><span class="line">            handler().handlerAdded(this);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 3 设置handler的状态为ADD_COMPLETE</span><br><span class="line"> final boolean setAddComplete() &#123;</span><br><span class="line">        for (; ; ) &#123;</span><br><span class="line">            int oldState &#x3D; handlerState;</span><br><span class="line">            if (oldState &#x3D;&#x3D; REMOVE_COMPLETE) &#123;</span><br><span class="line">                return false;</span><br><span class="line">            &#125;</span><br><span class="line">        if (HANDLER_STATE_UPDATER.compareAndSet(this, oldState, ADD_COMPLETE)) &#123;</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>task的内容主要是通知这个handler被加进来了。<br>在方法2中，我们必须在调用handlerAdded之前调用setAddComplete。<br>否则，如果handlerAdded方法生成任何pipeline事件ctx.handler（）都会错过它们，因为状态不允许。</p>
+<p>以上是对当前Channel还未注册到Eventloop是的处理，若已经注册了，则如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">EventExecutor executor &#x3D; newCtx.executor();</span><br><span class="line">if (!executor.inEventLoop()) &#123;</span><br><span class="line">         callHandlerAddedInEventLoop(newCtx, executor);</span><br><span class="line">         return this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先是获取绑定的exector，再判断这个excutor是否是自己注册时候绑定的eventloop（），若是，则继续执行上面的callHandlerAdded0（）方法去通知这个handler已经添加了，若不是channel注册时候绑定的那个eventloop，则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private void callHandlerAddedInEventLoop(final AbstractChannelHandlerContext newCtx, EventExecutor executor) &#123;</span><br><span class="line">        newCtx.setAddPending();</span><br><span class="line">        executor.execute(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                callHandlerAdded0(newCtx);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>到这了你会发现怎么这么眼熟，没错，这里就是用exector去执行了handler添加通知的事情，和上面一样的操作。</p>
+<p>addBefore的分析到这就结束了，由于其他的一些操作与这个都是大同小异，对于其他的操作这里就不自赘述了，至此，ChannelPipeline就分析结束了。</p>
+<h3 id="什么是ChannelHandler？"><a href="#什么是ChannelHandler？" class="headerlink" title="什么是ChannelHandler？"></a>什么是ChannelHandler？</h3><p>正如上一小节所说的ChannelHandler是用于拦截或者处理Channel的入站和出站事件的。它可以选择性的拦截和处理自己感兴趣的事件，也可以通过透传和终止事件的传递。基于ChannelHandler接口，用户可以方便的进行业务逻辑定制，例如打印日志，统一封装异常信息，性能统计和消息编解码等。</p>
+<p>ChannelHandler支持两种注解：</p>
+<ul>
+<li>Sharable：允许多个ChannelPipeLine共用同一个ChannelHandler。</li>
+<li>Skip：被Skip注解的方法不会被调用，直接忽略掉</li>
+</ul>
+<p>根据入站和出站的不同，Netty将ChannelHandler扩展了两个重要的子类：</p>
+<ul>
+<li>ChannelInboundHandler：负责处理入站的数据以及各种状态变化</li>
+<li>ChannelOutboundHandler：负责处理出站的数据并且允许拦截所有的数据</li>
+</ul>
+<p>ChannelHandler和ChannelPipeline的关系如下图所示：</p>
+<p><img src="/images/channle_pipeline_in_out.png" alt="channle_pipeline_in_out.png"></p>
+<h3 id="什么是ChannelHandlerContext？"><a href="#什么是ChannelHandlerContext？" class="headerlink" title="什么是ChannelHandlerContext？"></a>什么是ChannelHandlerContext？</h3><p>ChannelHandlerContext 代表了 ChannelHandler 和 ChannelPipeline 之间的关联，每当有 ChannelHandler 添加到 ChannelPipeline 中时，都会创建 ChannelHandlerContext。</p>
+<p>ChannelHandlerContext 的主要功能是管理它所关联的 ChannelHandler 和在同一个 ChannelPipeline 中的其他 ChannelHandler 之间的交互。</p>
+<p>ChannelHandlerContext 有很多的方法，其中一些方法也存在于 Channel 和 ChannelPipeline 本身上，但是有一点重要的不同。如果调用 Channel 或者 ChannelPipeline 上的这些方法，它们将沿着整个 ChannelPipeline 进行传播。 而调用位于 ChannelHandlerContext 上的相同方法，则将从当前所关联的 ChannelHandler 开始，并且只会传播给位于该 ChannelPipeline 中的下一个能够处理该事件的 ChannelHandler。</p>
+<p>值得注意的是：</p>
+<ul>
+<li><p>ChannelHandlerContext 和 ChannelHandler 之间的关联(绑定)是永远不会改变的，所以缓存对它的引用是安全的;</p>
+</li>
+<li><p>如同我们在本节开头所解释的一样，相对于其他类的同名方法，ChannelHandlerContext的方法将产生更短的事件流，应该尽可能地利用这个特性来获得最大的性能。</p>
+</li>
+</ul>
+<p>Channel，ChannelPipeline，ChannelHandler和ChannelHandlerContext四者之间的关系如下：</p>
+<p><img src="/images/channel_handler_process.png" alt="channel_handler_process.png"></p>
+<p>ChannelHandler，ChannelPipeline和ChannelHandlerContext三者的对应关系如下：</p>
+<p><img src="/images/handler_context_pipeline_relation.png" alt="handler_context_pipeline_relation.png"></p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/klaus-gu" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2021 klaus_turbo<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
