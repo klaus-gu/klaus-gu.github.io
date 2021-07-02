@@ -3,11 +3,11 @@
   <title>进学致和，行方思远。</title>
   
   <subtitle>人不过是一根芦苇,是自然界最脆弱的东西,但人却是一根能思考的芦苇。</subtitle>
-  <link href="https://github.com/klaus-gu/klaus-gu.github.io/atom.xml" rel="self"/>
+  <link href="http://example.com/atom.xml" rel="self"/>
   
-  <link href="https://github.com/klaus-gu/klaus-gu.github.io/"/>
+  <link href="http://example.com/"/>
   <updated>2021-07-02T01:24:52.334Z</updated>
-  <id>https://github.com/klaus-gu/klaus-gu.github.io/</id>
+  <id>http://example.com/</id>
   
   <author>
     <name>klaus_turbo</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>浅谈Springboot自动装配</title>
-    <link href="https://github.com/klaus-gu/klaus-gu.github.io/2020/11/21/springboot_autowired/"/>
-    <id>https://github.com/klaus-gu/klaus-gu.github.io/2020/11/21/springboot_autowired/</id>
+    <link href="http://example.com/2020/11/21/springboot_autowired/"/>
+    <id>http://example.com/2020/11/21/springboot_autowired/</id>
     <published>2020-11-21T05:55:34.000Z</published>
     <updated>2021-07-02T01:24:52.334Z</updated>
     
@@ -33,17 +33,17 @@
     
     
     
-    <category term="Springboot" scheme="https://github.com/klaus-gu/klaus-gu.github.io/categories/Springboot/"/>
+    <category term="Springboot" scheme="http://example.com/categories/Springboot/"/>
     
     
-    <category term="Springboot" scheme="https://github.com/klaus-gu/klaus-gu.github.io/tags/Springboot/"/>
+    <category term="Springboot" scheme="http://example.com/tags/Springboot/"/>
     
   </entry>
   
   <entry>
     <title>Netty-ChannelPipeline，ChannelHandler和ChannelHandlerContext</title>
-    <link href="https://github.com/klaus-gu/klaus-gu.github.io/2020/10/27/channelpipeline-channelhandler-channelhandlercontext/"/>
-    <id>https://github.com/klaus-gu/klaus-gu.github.io/2020/10/27/channelpipeline-channelhandler-channelhandlercontext/</id>
+    <link href="http://example.com/2020/10/27/channelpipeline-channelhandler-channelhandlercontext/"/>
+    <id>http://example.com/2020/10/27/channelpipeline-channelhandler-channelhandlercontext/</id>
     <published>2020-10-27T06:55:48.000Z</published>
     <updated>2021-07-02T01:24:52.327Z</updated>
     
@@ -57,19 +57,19 @@
     
     
     
-    <category term="Netty" scheme="https://github.com/klaus-gu/klaus-gu.github.io/categories/Netty/"/>
+    <category term="Netty" scheme="http://example.com/categories/Netty/"/>
     
     
-    <category term="Netty" scheme="https://github.com/klaus-gu/klaus-gu.github.io/tags/Netty/"/>
+    <category term="Netty" scheme="http://example.com/tags/Netty/"/>
     
-    <category term="Channel" scheme="https://github.com/klaus-gu/klaus-gu.github.io/tags/Channel/"/>
+    <category term="Channel" scheme="http://example.com/tags/Channel/"/>
     
   </entry>
   
   <entry>
     <title>Netty-Channel</title>
-    <link href="https://github.com/klaus-gu/klaus-gu.github.io/2020/10/21/netty-channel/"/>
-    <id>https://github.com/klaus-gu/klaus-gu.github.io/2020/10/21/netty-channel/</id>
+    <link href="http://example.com/2020/10/21/netty-channel/"/>
+    <id>http://example.com/2020/10/21/netty-channel/</id>
     <published>2020-10-21T11:55:43.000Z</published>
     <updated>2021-07-02T01:24:52.331Z</updated>
     
@@ -83,12 +83,12 @@
     
     
     
-    <category term="Netty" scheme="https://github.com/klaus-gu/klaus-gu.github.io/categories/Netty/"/>
+    <category term="Netty" scheme="http://example.com/categories/Netty/"/>
     
     
-    <category term="Netty" scheme="https://github.com/klaus-gu/klaus-gu.github.io/tags/Netty/"/>
+    <category term="Netty" scheme="http://example.com/tags/Netty/"/>
     
-    <category term="Channel" scheme="https://github.com/klaus-gu/klaus-gu.github.io/tags/Channel/"/>
+    <category term="Channel" scheme="http://example.com/tags/Channel/"/>
     
   </entry>
   
