@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!--Description-->
+
+    
+
+    
+        <meta name="description" content="Nacos2.x 注册流程注意：本文所有内容均是基于Nacos2.0.2版本。
+流程梳理整理了一张基本的流程图来描述 Nacos 的服务注册的基本流程，先一起来看一下：
+
+客户端服务注册流程Nacos 的服务注册的统一入口在 NamingService 这个接口处定义，通过调用 registerIn"/>
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="klaus_turbo"/>
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Nacos2.x Naming"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="Nacos2.x 注册流程注意：本文所有内容均是基于Nacos2.0.2版本。
+流程梳理整理了一张基本的流程图来描述 Nacos 的服务注册的基本流程，先一起来看一下：
+
+客户端服务注册流程Nacos 的服务注册的统一入口在 NamingService 这个接口处定义，通过调用 registerIn"/>
+    
+
+    <!--Open Graph Site Name-->
+        <meta property="og:site_name" content="进学致和，行方思远。"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article"/>
+    
+
+    <!--Page Cover-->
+    
+    
+        <meta property="og:image" content="http://example.comimg/crescent-moon-149988-5530eca8bb0e4a8b92115b454a660af5.jpg"/>
+    
+
+        <meta name="twitter:card" content="summary_large_image"/>
+
+    
+
+    
+        <meta name="twitter:image" content="http://example.comimg/crescent-moon-149988-5530eca8bb0e4a8b92115b454a660af5.jpg"/>
+    
+
+    <!-- Title -->
+    
+    <title>Nacos2.x Naming - 进学致和，行方思远。</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet"/>
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+    <link rel="icon" href="img/sky-earth-space-working-2156-2a5a00a78a854bb7b67af4eb5495480a.jpg"/>
+    
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="进学致和，行方思远。" type="application/atom+xml">
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">进学致和，行方思远。</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                主页
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                归档
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                标签
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                分类
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a target="_blank" rel="noopener" href="https://github.com/klaus-gu">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('/img/crescent-moon-149988-5530eca8bb0e4a8b92115b454a660af5.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Nacos2.x Naming</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                            Posted by klaus_turbo on
+                        
+                        
+                            2021-07-07
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Nacos/">#Nacos</a> <a href="/tags/注册中心/">#注册中心</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                        
+
+<a href="/categories/Nacos/">Nacos</a>
+
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="Nacos2-x-注册流程"><a href="#Nacos2-x-注册流程" class="headerlink" title="Nacos2.x 注册流程"></a>Nacos2.x 注册流程</h1><p>注意：本文所有内容均是基于Nacos2.0.2版本。</p>
+<h4 id="流程梳理"><a href="#流程梳理" class="headerlink" title="流程梳理"></a>流程梳理</h4><p>整理了一张基本的流程图来描述 Nacos 的服务注册的基本流程，先一起来看一下：</p>
+<p><img src="https://note.youdao.com/favicon.ico" alt="流程图"></p>
+<h4 id="客户端服务注册流程"><a href="#客户端服务注册流程" class="headerlink" title="客户端服务注册流程"></a>客户端服务注册流程</h4><p>Nacos 的服务注册的统一入口在 NamingService 这个接口处定义，通过调用 registerInstance（）方法来注。在 NacosNamingService 处实现了 NamingService 服务注册接口的基础注册方法：registerInstance（）。而实现类的具体实现其实是委托给了 NacosNamingServiceDelegate 这个类去实现的，这个类是比较特殊的，在 1.x 版本是没有的，是在 2.x 版本中新增了 Grpc 之后为了适配原先 1.x 版本的 Nacos-Client 而存在的，在旧版本的客户端中，NacosNamingService 的服务注册请求是直接交给其代理类直接去发送 Http 请求 Server 来实现服务注册的。具体的暂时不做深入。在委托类中，进行 Grpc 和 Http 分流的操作我们可以初窥一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">private NamingClientProxy getExecuteClientProxy(Instance instance) &#123;</span><br><span class="line">        return instance.isEphemeral() ? grpcClientProxy : httpClientProxy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>应该还是比较易懂的，直接根据服务实例的节点类型来判断，是临时节点的则直接走 GRPC ，否则 Http。<br>在处理 Grpc 请求的代理类 NamingGrpcClientProxy 中 继续调用其 registerService（）方法，然后通过 requestToServer（）封装 Grpc 请求，最后由 GrpcClient 去请求 Nacos-Server 注册服务。至此，Nacos 客户端服务注册的请求流程就走完了。</p>
+<h4 id="服务端服务注册流程"><a href="#服务端服务注册流程" class="headerlink" title="服务端服务注册流程"></a>服务端服务注册流程</h4><p>在客户端将 Grpc 请求丢出来之后，Server 端会通过一个叫 GrpcRequestAcceptor 来接受所有 Grpc 请求（体现了代码规范的重要性，见名知意），通过调用其定义的 request 方法，根据请求 type 来从请求处理器注册中心中获取对应的请求处理器来处理请求：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RequestHandler requestHandler &#x3D; requestHandlerRegistry.getByRequestType(type);</span><br></pre></td></tr></table></figure>
+<p>RequestHandlerRegistry 是一个托管给 Spring 的 Bean ，在容器启动刷新之后，其会将所有继承了标注基类 RequestHandler 的 Bean 注入其内部的 Map 缓存，用各个 Bean 的 Type 做抽象工厂 Bean 获取标识。当然，此处由于我们的请求是用于处理服务注册（type = registerInstance）的，所以我们会在 InstanceRequestHandler 中去处理，调用 registerInstance（）来处理，值得注意的是，这里的服务由于是临时节点，会调用 EphemeralClientOperationServiceImpl 类去做最后的处理。到这，服务端的服务注册请求就处理完毕了。</p>
+<p>在基于简化流程分析之后，相信大家对于 Nacos 的注册流程有了一个大体的概念了。不难发现与旧版本 1.x 的不同点之一便是多了很多的扩展代码，如客户端的 NacosNamingServiceDelegate 用来扩展协议，服务端的 GrpcRequestAcceptor 用来分发请求，扩展请求类型，RequestHandlerRegistry 工厂则是隐式的扩展了请求处理器。设计模式如此之重要。值得一提的是，1.x 版本的 Nacos 是基于内核化思想实现的，新版本的 2.x 版本是基于插件化思想实现的，值得大家琢磨学习，架构思想是如何实现的，这也是所谓的源码之道。</p>
+<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><p>在看了基础流程介绍之后，我们将会进入到一段相对枯涩的阶段：源码解析</p>
+<p>我们将会基于我们的流程，分为以下几个趴分别去解释 Nacos 到底做了什么：</p>
+<ul>
+<li>NamingService 实现类以及其委托代理类初始化流程</li>
+<li></li>
+</ul>
+<p>一般的，我们会通过一个工厂方法 NamingFactory，来创建我们的 NamingService 的实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Properties properties &#x3D; new Properties();</span><br><span class="line"></span><br><span class="line">properties.setProperty(&quot;serverAddr&quot;, &quot;127.0.0.1:8848&quot;); </span><br><span class="line"></span><br><span class="line">NamingService naming &#x3D; NamingFactory.createNamingService(properties);</span><br></pre></td></tr></table></figure>
+<p>在创建实例的时候我们会传入一个 Properties 对象到我们的 NamingService 的构造方法中，来初始化我们的 NamingService 对象。其作用我们应该大概能猜出来，我们后面慢慢来分析。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/klaus-gu" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="mailto:guyue375@outlook.com" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2021 klaus_turbo<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
