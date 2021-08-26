@@ -14,7 +14,7 @@
 
     
         <meta name="description" content="浅析 Nacos2.x 注册客户端启动流程注意：本文所有内容均是基于Nacos2.0.2版本。
-客户端服务注册流程Nacos 的服务注册的统一入口在 NamingService 这个接口处定义，通过调用 registerInstance（）方法来注。在 NacosNamingService 处实现了"/>
+客户端服务注册流程Nacos 的服务注册的统一入口在 NamingService 这个接口处定义，通过调用 registerInstance（）方法来注册。在 NacosNamingService 处实现"/>
     
 
     <!--Author-->
@@ -30,7 +30,7 @@
     <!--Open Graph Description-->
     
         <meta property="og:description" content="浅析 Nacos2.x 注册客户端启动流程注意：本文所有内容均是基于Nacos2.0.2版本。
-客户端服务注册流程Nacos 的服务注册的统一入口在 NamingService 这个接口处定义，通过调用 registerInstance（）方法来注。在 NacosNamingService 处实现了"/>
+客户端服务注册流程Nacos 的服务注册的统一入口在 NamingService 这个接口处定义，通过调用 registerInstance（）方法来注册。在 NacosNamingService 处实现"/>
     
 
     <!--Open Graph Site Name-->
@@ -222,7 +222,7 @@
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <h1 id="浅析-Nacos2-x-注册客户端启动流程"><a href="#浅析-Nacos2-x-注册客户端启动流程" class="headerlink" title="浅析 Nacos2.x 注册客户端启动流程"></a>浅析 Nacos2.x 注册客户端启动流程</h1><p>注意：本文所有内容均是基于Nacos2.0.2版本。</p>
-<h4 id="客户端服务注册流程"><a href="#客户端服务注册流程" class="headerlink" title="客户端服务注册流程"></a>客户端服务注册流程</h4><p>Nacos 的服务注册的统一入口在 NamingService 这个接口处定义，通过调用 registerInstance（）方法来注。在 NacosNamingService 处实现了 NamingService 服务注册接口的基础注册方法：registerInstance（）。而实现类的具体实现其实是委托给了 NacosNamingServiceDelegate 这个类去实现的，这个类是比较特殊的，在 1.x 版本是没有的，是在 2.x 版本中新增了 Grpc 之后为了适配原先 1.x 版本的 Nacos-Client 而存在的，在旧版本的客户端中，NacosNamingService 的服务注册请求是直接交给其代理类直接去发送 Http 请求 Server 来实现服务注册的。具体的暂时不做深入。在委托类中，进行 Grpc 和 Http 分流的操作我们可以初窥一下：</p>
+<h4 id="客户端服务注册流程"><a href="#客户端服务注册流程" class="headerlink" title="客户端服务注册流程"></a>客户端服务注册流程</h4><p>Nacos 的服务注册的统一入口在 NamingService 这个接口处定义，通过调用 registerInstance（）方法来注册。在 NacosNamingService 处实现了 NamingService 服务注册接口的基础注册方法：registerInstance（）。而其具体实现是委托给了 NacosNamingServiceDelegate ，这个类比较特殊，在 1.x 版本是没有的，是在 2.x 版本中新增了 Grpc 之后为了适配原先 1.x 版本的 Nacos-Client 而存在的，在旧版本的客户端中，NacosNamingService 的服务注册请求是交给其代理类直接去发送 Http 请求 Server 来实现服务注册的。具体的暂时不做深入。在委托类中，进行 Grpc 和 Http 分流的操作我们可以初窥一下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">private NamingClientProxy getExecuteClientProxy(Instance instance) &#123;</span><br><span class="line">        return instance.isEphemeral() ? grpcClientProxy : httpClientProxy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>应该还是比较易懂的，直接根据服务实例的节点类型来判断，是临时节点的则直接走 GRPC ，否则 Http。<br>在处理 Grpc 请求的代理类 NamingGrpcClientProxy 中 继续调用其 registerService（）方法，然后通过 requestToServer（）封装 Grpc 请求，最后由 GrpcClient 去请求 Nacos-Server 注册服务。至此，Nacos 客户端服务注册的请求流程就走完了。</p>
