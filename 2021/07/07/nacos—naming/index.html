@@ -226,12 +226,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">private NamingClientProxy getExecuteClientProxy(Instance instance) &#123;</span><br><span class="line">        return instance.isEphemeral() ? grpcClientProxy : httpClientProxy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>应该还是比较易懂的，直接根据服务实例的节点类型来判断，是临时节点的则直接走 GRPC ，否则 Http。<br>在处理 Grpc 请求的代理类 NamingGrpcClientProxy 中 继续调用其 registerService（）方法，然后通过 requestToServer（）封装 Grpc 请求，最后由 GrpcClient 去请求 Nacos-Server 注册服务。</p>
-<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><p>在看了基础流程介绍之后，我们将会进入到一段相对枯涩的阶段：源码解析</p>
-<p>我们将会基于我们的流程，分为以下几个趴分别去解释 Nacos 到底做了什么：</p>
-<ul>
-<li>NamingService 实现类以及其委托代理类初始化流程</li>
-<li>从服务信息通知过程来了解贯穿整个Nacos的NotifyCenter是如何运行的</li>
-</ul>
+<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><p>我们将会基于我们的流程，来分析 NamingService 实现类以及其代理类初始化流程。</p>
 <p>一般的，我们会通过一个工厂方法 NamingFactory，来创建我们的 NamingService 的实例：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Properties properties &#x3D; new Properties();</span><br><span class="line"></span><br><span class="line">properties.setProperty(&quot;serverAddr&quot;, &quot;127.0.0.1:8848&quot;); </span><br><span class="line"></span><br><span class="line">NamingService naming &#x3D; NamingFactory.createNamingService(properties);</span><br></pre></td></tr></table></figure>
 <p>在创建实例的时候我们会传入一个 Properties 对象到我们的 NamingService 的构造方法中，来初始化我们的 NamingService 对象。我们看一下其实现类 NacosNamingService 的构造函数是怎么处理的：</p>
