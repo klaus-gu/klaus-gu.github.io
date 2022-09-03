@@ -13,7 +13,7 @@
     
 
     
-        <meta name="description" content="手写spring之实现一个简单的spring容器前言工作了这么久，每当做的工作内容是和应用开发相关的，就抛不开 spring 这个话题。甚至在一些面试中，面试官还是不停的在问：“spring 是什么？怎么解决循环依赖？”巴拉巴拉的一大堆和spring相关的问题。当然背过八股文，看过面经的对这种问题回"/>
+        <meta name="description" content="手写Spring核心 – 如何实现一个最简单的spring容器前言工作了这么久，每当做的工作内容是和应用开发相关的，就抛不开 spring 这个话题。甚至在一些面试中，面试官还是不停的在问：“spring 是什么？怎么解决循环依赖？”巴拉巴拉的一大堆和spring相关的问题。当然背过八股文，看过面经"/>
     
 
     <!--Author-->
@@ -23,12 +23,12 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="手写spring之实现一个简单的spring容器"/>
+        <meta property="og:title" content="手写Spring核心 -- 如何实现一个最简单的spring容器"/>
     
 
     <!--Open Graph Description-->
     
-        <meta property="og:description" content="手写spring之实现一个简单的spring容器前言工作了这么久，每当做的工作内容是和应用开发相关的，就抛不开 spring 这个话题。甚至在一些面试中，面试官还是不停的在问：“spring 是什么？怎么解决循环依赖？”巴拉巴拉的一大堆和spring相关的问题。当然背过八股文，看过面经的对这种问题回"/>
+        <meta property="og:description" content="手写Spring核心 – 如何实现一个最简单的spring容器前言工作了这么久，每当做的工作内容是和应用开发相关的，就抛不开 spring 这个话题。甚至在一些面试中，面试官还是不停的在问：“spring 是什么？怎么解决循环依赖？”巴拉巴拉的一大堆和spring相关的问题。当然背过八股文，看过面经"/>
     
 
     <!--Open Graph Site Name-->
@@ -55,7 +55,7 @@
 
     <!-- Title -->
     
-    <title>手写spring之实现一个简单的spring容器 - 进学致和，行方思远。</title>
+    <title>手写Spring核心 -- 如何实现一个最简单的spring容器 - 进学致和，行方思远。</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
@@ -170,7 +170,7 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>手写spring之实现一个简单的spring容器</h1>
+                    <h1>手写Spring核心 -- 如何实现一个最简单的spring容器</h1>
                     
                     <span class="meta">
                         <!-- Date and Author -->
@@ -219,7 +219,7 @@
 
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h1 id="手写spring之实现一个简单的spring容器"><a href="#手写spring之实现一个简单的spring容器" class="headerlink" title="手写spring之实现一个简单的spring容器"></a>手写spring之实现一个简单的spring容器</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>工作了这么久，每当做的工作内容是和应用开发相关的，就抛不开 spring 这个话题。甚至在一些面试中，面试官还是不停的在问：“spring 是什么？怎么解决循环依赖？”巴拉巴拉的一大堆和spring相关的问题。当然背过八股文，看过面经的对这种问题回答起来都是溜到飞起，但如果换一个面经没有的，八股文没有的，你是不是还能回答的出来？或者说在实际的应用场景中，你对spring真正的理解，决定了你在开发或者解决问题的时候站在什么样子的角度去思考解决这个事情。于是在某一个深夜，我决定去一探 spring 的庐山真面目，然后手写一个 spring。为什么要这么做呢？其实作为一个实打实的理科生，深知对于所有的技术，靠死记硬背是不行的，必须以理科思维理解为目的的学会。剔除 Spring 源码中繁杂的部分，以 IOC 为主体去逐步的实现 Spring 中比较核心的内容。</p>
+                <h1 id="手写Spring核心-–-如何实现一个最简单的spring容器"><a href="#手写Spring核心-–-如何实现一个最简单的spring容器" class="headerlink" title="手写Spring核心 – 如何实现一个最简单的spring容器"></a>手写Spring核心 – 如何实现一个最简单的spring容器</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>工作了这么久，每当做的工作内容是和应用开发相关的，就抛不开 spring 这个话题。甚至在一些面试中，面试官还是不停的在问：“spring 是什么？怎么解决循环依赖？”巴拉巴拉的一大堆和spring相关的问题。当然背过八股文，看过面经的对这种问题回答起来都是溜到飞起，但如果换一个面经没有的，八股文没有的，你是不是还能回答的出来？或者说在实际的应用场景中，你对spring真正的理解，决定了你在开发或者解决问题的时候站在什么样子的角度去思考解决这个事情。于是在某一个深夜，我决定去一探 spring 的庐山真面目，然后手写一个 spring。为什么要这么做呢？其实作为一个实打实的理科生，深知对于所有的技术，靠死记硬背是不行的，必须以理科思维理解为目的的学会。剔除 Spring 源码中繁杂的部分，以 IOC 为主体去逐步的实现 Spring 中比较核心的内容。</p>
 <p>废话不多说，我们直接进入正题。</p>
 <h3 id="Spring-bean容器是什么？"><a href="#Spring-bean容器是什么？" class="headerlink" title="Spring bean容器是什么？"></a>Spring bean容器是什么？</h3><p>要回答这个问题，我们首先要知道，Spring容器实际真正做的是什么事情。在spring容器中，它包含并管理着应用对象的配置和生命周期，在这个意义上，spring其实是一种用于承载对象的容器，我们可以配置每一个Bean对象是如何创建，这些bean可以创建成一个单独的实例或者每次需要的时候都生成一个新的实例，以及他们是如何相互关联构建和使用的。</p>
 <p>如果一个bean对象交给spring容器管理，那么这个bean对象就应该以零件的方式被拆解后存放到bean的定义中，这就相当于是一种把bean对象解耦的操作，可以由spring更加容易的管理，这样的将实际bean对象以某种方式拆解后保存的方式也是前面我们提到的循环依赖能够得到解决的根本之一。</p>
